@@ -1,6 +1,6 @@
-import { useEffect, useReducer } from 'react';
+import { useEffect, useReducer, useState } from 'react';
 import './App.css';
-import { createGame,getCountries } from './utils/operations';
+import { createGame,getCountries, load } from './utils/operations';
 import { initialStates,countryReducer } from './reducers/countryReducer';
 import Quiz from './components/Quiz';
 import Button from './components/Button';
@@ -8,25 +8,23 @@ import congrats from './resource/congrats.svg';
 
 function App() {
   const[state,dispatch] = useReducer(countryReducer,initialStates);
+  const[resultImage,setResultImage] = useState(null);
 
   useEffect(() => {
-    const getData = async () =>{
-      /*fetch('https://restcountries.com/v3.1/all')
-        .then(response => response.json())
-        .then(data => {   
-          let initialGame = createGame(data);
-          dispatch({type:'NEW_GAME',game: [...initialGame]});        
-         
-        })
-        .catch(error => {
-          console.log(error)
-        })*/
+    const getData = async () =>{    
         let countries = await getCountries();
         let initialGame = createGame(countries);
         dispatch({type:'NEW_GAME',game: [...initialGame]}); 
     }
+
+    const loadImageResult = () => {
+      load(congrats).then(()=>{
+        setResultImage(congrats);
+      })
+    }
   
     getData();  
+    loadImageResult();
   }, [])
 
   const btnMenuHandlClick = (e) =>{   
@@ -45,18 +43,26 @@ function App() {
 
   if (state.quizCompleted.length === 10) {
     return(
-      <div className='completed-quiz-container'>
-        <img src={congrats} alt='CongratsImage'/>
-        <div>
-          <span className='child1'>Congrats! You completed the quiz.</span>
-          <span className='child2'>You answer {state.correctAnswers}/10 correctly.</span>
-          <Button buttonClass='btn-congrats' activeClass='bg-active' handleOnClick={playAgain} > 
-              Play again                                         
-          </Button>
-         </div>
-        
-        
-      </div>
+      <>
+       {
+        resultImage === null 
+        ?
+        <h1 className='firstLoad'>Loading result....</h1>
+        :
+        <div className='completed-quiz-container'>
+          <img src={resultImage} alt='CongratsImage'/>
+          <div>
+            <span className='child1'>Congrats! You completed the quiz.</span>
+            <span className='child2'>You answer {state.correctAnswers}/10 correctly.</span>
+            <Button buttonClass='btn-congrats' activeClass='bg-active' handleOnClick={playAgain} > 
+                Play again                                         
+            </Button>
+          </div>      
+        </div>
+       }
+      
+      </>
+      
     )
   }
 
@@ -77,8 +83,7 @@ function App() {
                 <span key={index}>
                   <Button buttonClass="btn-menu" key={index}                      
                     questionId={index}
-                    btnActive={state.activeQuiz}
-                    //handleOnClick={(id)=>dispatch({type:'CURRENT_ACTIVE',active:id})}   
+                    btnActive={state.activeQuiz}                      
                     handleOnClick={btnMenuHandlClick} 
                     activeClass={index === state.activeQuiz || state.quizCompleted.includes(index) ? 'bg-active' : 'bg-default'}               
                     >

@@ -10,6 +10,15 @@ export const getRandomCountries = (countries,numElements) =>{
     return elementsSelected;
 }
 
+export const load = (src) => {
+    return new Promise((resolve, reject) => {
+        const image = new Image();
+        image.addEventListener('load', resolve);
+        image.addEventListener('error', reject);
+        image.src = src;
+    });
+}
+
 export const getQuizQuestions = (question = null) => {
     let questions = [
         'Which is the capital of $text ?',
@@ -36,11 +45,7 @@ const getChoices = (question,data) => {
     let options = [];   
     switch (question) {
         case 0:
-            /*for (let index = 0; index < data.length; index++) {
-               // console.log(data[index]);
-              data[index].hasOwnProperty('capital') ? options.push(data[index].capital[0]) :  options.push('NONE');    
-               
-            }*/
+           
             let capitalIndex = 0;
             while (options.length < 4) {
                 data[capitalIndex].hasOwnProperty('capital') ? options.push(data[capitalIndex].capital[0]) :  options.push('NONE'); 
@@ -48,10 +53,7 @@ const getChoices = (question,data) => {
             }            
             break;         
         case 1:
-            /*for (let index = 0; index < data.length; index++) {
-                //options.push(data[index].name.common); 
-                data[index].hasOwnProperty('name') ? options.push(data[index].name.common) :  options.push('NONE');               
-            }*/
+           
             let nameIndex = 0;
             while (options.length < 4) {
                 data[nameIndex].hasOwnProperty('name') ? options.push(data[nameIndex].name.common) : options.push('NONE'); 
@@ -59,13 +61,7 @@ const getChoices = (question,data) => {
             } 
             break;
         case 2:
-            /*for (let index = 0; index < data.length; index++) {                  
-                //data[index].hasOwnProperty('region') ? options.push(data[index].region) :  options.push('NONE'); 
-                let value = data[index].hasOwnProperty('region') ? data[index].region : 'NONE';  
-                if (!options.includes(value)) {
-                    options.push(value);
-                }              
-            }*/
+            
             let regionIndex = 0;
             while (options.length < 4) {
                 let value = data[regionIndex].hasOwnProperty('region') ? data[regionIndex].region : 'NONE';  
@@ -76,20 +72,7 @@ const getChoices = (question,data) => {
             }
             break;
         case 3:
-           /* for (let index = 0; index < data.length; index++) {
-               // console.log(data[index]);
-               // let curr = data[index].hasOwnProperty('currencies') ? Object.values(data[index].currencies) : 'NONE'; 
-                //options.push(curr[0].name);   
-                if (data[index].hasOwnProperty('currencies')) {
-                    let curr = Object.values(data[index].currencies);
-                    if (!options.includes(curr[0].name)) {
-                        options.push(curr[0].name);
-                    }
-                    
-                } else {
-                    options.push('NONE');
-                }                
-            }   */
+           
             let currencyIndex = 0;
             while (options.length < 4) {
                 if (data[currencyIndex].hasOwnProperty('currencies')) {
@@ -105,13 +88,7 @@ const getChoices = (question,data) => {
             }             
             break;
         case 4:
-            /*for (let index = 0; index < data.length; index++) {
-                //options.push(data[index].fifa);    
-               let value = data[index].hasOwnProperty('fifa') ? data[index].fifa :  'NONE'; 
-                if (!options.includes(value)) {
-                    options.push(value);
-                }            
-            }*/
+            
             let fifaIndex = 0;
             while (options.length < 4) {
                 let value = data[fifaIndex].hasOwnProperty('fifa') ? data[fifaIndex].fifa :  'NONE'; 
@@ -122,18 +99,7 @@ const getChoices = (question,data) => {
             }
             break;
         case 5:
-            /*for (let index = 0; index < data.length; index++) {
-                if (data[index].hasOwnProperty('languages')) {
-                    let lang = Object.values(data[index].languages);
-                    if (!options.includes(lang[0])) {
-                       options.push(lang[0]);
-                    } 
-                    
-                } else {
-                    options.push('NONE'); 
-                }
-                                 
-            } */
+           
             let languageIndex = 0;
             while (options.length < 4) {
                 if (data[languageIndex].hasOwnProperty('languages')) {
@@ -149,9 +115,7 @@ const getChoices = (question,data) => {
             }           
             break;
         case 6:
-            /*for (let index = 0; index < data.length; index++) {                             
-                data[index].hasOwnProperty('area') ? options.push(data[index].area.toString()) : options.push('NONE');                  
-            }*/
+            
             let areaIndex = 0;
             while (options.length < 4) {
                data[areaIndex].hasOwnProperty('area') ? options.push(data[areaIndex].area.toString()) : options.push('NONE');
@@ -159,9 +123,7 @@ const getChoices = (question,data) => {
             }              
             break;
         case 7:
-            /*for (let index = 0; index < data.length; index++) {                 
-                data[index].hasOwnProperty('population') ? options.push(data[index].population.toString()) : options.push('NONE');                  
-            }    */
+           
             let populationIndex = 0;
             while (options.length < 4) {
                 data[populationIndex].hasOwnProperty('population') ? options.push(data[populationIndex].population.toString()) : options.push('NONE');
@@ -169,13 +131,7 @@ const getChoices = (question,data) => {
             }         
             break;    
         case 8:            
-            /*for (let index = 0; index < data.length; index++) {                 
-                // data[index].hasOwnProperty('car') ? options.push(data[index].car.signs[0]) : options.push('NONE'); 
-                let value = data[index].hasOwnProperty('car') && data[index].car.hasOwnProperty('signs') ? data[index].car.signs[0] : options.push('NONE');
-                if (!options.includes(value)) {
-                    options.push(value);
-                }                 
-            } */
+           
             let carIndex = 0;
             while (options.length < 4) {
                 let value = data[carIndex].hasOwnProperty('car') && data[carIndex].car.hasOwnProperty('signs') ? data[carIndex].car.signs[0] : options.push('NONE');
@@ -186,12 +142,7 @@ const getChoices = (question,data) => {
             } 
             break;
         default:
-           /* for (let index = 0; index < data.length; index++) {                 
-                let value = data[index].hasOwnProperty('subregion') ? data[index].subregion : 'NONE';
-                if (!options.includes(value)) {
-                    options.push(value);
-                }                   
-            } */
+           
             let subregionIndex = 0;
             while (options.length < 4) {
                 let value = data[subregionIndex].hasOwnProperty('subregion') ? data[subregionIndex].subregion : 'NONE';
